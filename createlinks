@@ -1,0 +1,8 @@
+#!/usr/bin/perl -w
+
+use esmith::Build::CreateLinks qw(:all);
+
+my $event = 'nethserver-ha-update';
+
+event_link ("nethserver-ha-conf", $event ,'90');
+
