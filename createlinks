@@ -4,5 +4,8 @@ use esmith::Build::CreateLinks qw(:all);
 
 my $event = 'nethserver-ha-update';
 
-event_link ("nethserver-ha-conf", $event ,'90');
+event_link ("nethserver-ha-conf", $event ,'50');
+event_templates($event, qw(
+    /etc/sysconfig/cman
+));
 

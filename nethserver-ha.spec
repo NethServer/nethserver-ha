@@ -31,6 +31,12 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root)
+/etc/e-smith/db/configuration/defaults/corosync
+/etc/e-smith/db/configuration/defaults/drbd
+/etc/e-smith/db/configuration/defaults/pcsd
+/etc/e-smith/templates/etc/shorewall/rules/50cluster_services
+/etc/e-smith/templates/etc/sysconfig/cman
+/etc/e-smith/events/nethserver-ha-update/
 %attr(0554,root,root) /etc/e-smith/events/actions/nethserver-ha-conf
 %dir /etc/e-smith/events/nethserver-ha-update
 
