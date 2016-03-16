@@ -10,6 +10,7 @@ BuildArch:	noarch
 Autoreq:	no
 BuildRequires:  nethserver-devtools	
 Requires: pacemaker corosync cman pcs fence-agents
+Requires: drbd84-utils kmod-drbd84
 
 %description
 Install and configure corosync and pacemaker for an easy two node cluster on NethServer
