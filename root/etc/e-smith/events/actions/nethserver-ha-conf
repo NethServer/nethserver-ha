@@ -4,10 +4,12 @@ set -e
 
 NODE1=nv1.nethserverha
 NODE2=nv2.nethserverha
+NODE1_IP=192.168.144.51
+NODE2_IP=192.168.144.52
 
 # Set hostnames
-db hosts set nv1.nethvoiceha remote IpAddress $NODE1
-db hosts set nv2.nethvoiceha remote IpAddress $NODE2
+db hosts set $NODE1 remote IpAddress $NODE1_IP
+db hosts set $NODE2 remote IpAddress $NODE2_IP
 signal-event nethserver-hosts-update
 
 # Configure corosync
