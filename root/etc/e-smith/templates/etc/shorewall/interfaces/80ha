@@ -1,0 +1,11 @@
+#
+# 80ha
+#
+
+{
+    use esmith::NetworksDB;
+    my $ndb = esmith::NetworksDB->open();
+    foreach ($ndb->get_all_by_prop('role' => 'ha')) {
+        $OUT .= "ha\t".$_->key."\ttcpflags,nosmurfs";
+    }
+}

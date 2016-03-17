@@ -1,0 +1,6 @@
+#
+# 30policy_ha
+# Allow traffic only between ha interfaces
+#
+ha	$FW	ACCEPT
+
