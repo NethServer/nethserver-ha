@@ -41,6 +41,7 @@ event_templates('nethserver-ha-update', qw(
 event_templates('nethserver-ha-save', qw(
     /etc/sysconfig/cman
     /etc/hosts
+    /etc/drbd.d/drbd00.res
 ));
 
 event_actions('nethserver-ha-save', qw(

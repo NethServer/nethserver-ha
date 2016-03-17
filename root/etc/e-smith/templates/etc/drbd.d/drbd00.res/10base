@@ -1,22 +1,20 @@
 {
     use esmith::HostsDB;
     my $hdb = esmith::HostsDB->open_ro();
-    our $nv1 = $hdb->get_prop('nv1.nethserverha','IpAddress') || '192.168.144.51 ';
-    our $nv2 = $hdb->get_prop('nv2.nethserverha','IpAddress') || '192.168.144.52 ';
-    our $disk = $drbd{'Disk'} || '/dev/Volgroup/lv_drbd';
+    our $disk = $drbd{'Disk'} || '/dev/VolGroup/lv_drbd';
     return '';
 }
 resource drbd00 \{
-  on nv1.nethserverha \{
+  on ns1.{{$DomainName}} \{
     device    /dev/drbd0;
     disk      {{$disk}};
-    address   {{$nv1}}:7789;
+    address   192.168.144.51:7789;
     meta-disk internal;
   \}
-  on nv2.nethserverha \{
+  on ns2.{{$DomainName}} \{
     device    /dev/drbd0;
     disk      {{$disk}};
-    address   {{$nv2}}:7789;
+    address   192.168.144.52:7789;
     meta-disk internal;
   \}
 \}
