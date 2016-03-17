@@ -5,6 +5,11 @@ set -e
 NODE1=nv1.nethserverha
 NODE2=nv2.nethserverha
 
+# Set hostnames
+db hosts set nv1.nethvoiceha remote IpAddress $NODE1
+db hosts set nv2.nethvoiceha remote IpAddress $NODE2
+signal-event nethserver-hosts-update
+
 # Configure corosync
 
 ccs -f /etc/cluster/cluster.conf --createcluster nethserverha
