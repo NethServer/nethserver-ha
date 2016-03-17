@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w
+#!/bin/bash
 
 #
 # Copyright (C) 2016 Nethesis S.r.l.
@@ -20,39 +20,20 @@
 # along with NethServer.  If not, see COPYING.
 #
 
-use strict;
-use esmith::Build::CreateLinks qw(:all);
+set -e
 
-#
-# event nethserver-ha-update
-#
+DOMAIN=$(hostname -d)
+NODE1="ns1.${DOMAIN:-localdomain}"
+NODE2="ns2.${DOMAIN:-localdomain}"
+CONF="/etc/cluster/cluster.conf"
 
-event_actions('nethserver-ha-update', qw(
-    initialize-default-databases 00
-));
+ccs -f ${CONF} --createcluster nethserverha
+ccs -f ${CONF} --addnode ${NODE1}
+ccs -f ${CONF} --addnode ${NODE2}
+ccs -f ${CONF} --addfencedev pcmk agent=fence_pcmk
+ccs -f ${CONF} --addmethod pcmk-redirect ${NODE1}
+ccs -f ${CONF} --addmethod pcmk-redirect ${NODE2}
+ccs -f ${CONF} --addfenceinst pcmk ${NODE1} pcmk-redirect port=${NODE1}
+ccs -f ${CONF} --addfenceinst pcmk ${NODE2} pcmk-redirect port=${NODE2}
 
-event_templates('nethserver-ha-update', qw(
-    /etc/hosts
-));
-
-#
-# event nethserver-ha-save
-#
-event_templates('nethserver-ha-save', qw(
-    /etc/sysconfig/cman
-    /etc/hosts
-));
-
-event_actions('nethserver-ha-save', qw(
-    nethserver-ha-createcluster 20
-));
-
-#
-# event password-modify
-# generate a new secret when root's password changes
-#
-
-event_actions('password-modify', qw(
-    nethserver-ha-syncpcspw 40
-));
-
+echo "[INFO] Configured ${CONF} with ${NODE1} and ${NODE2}"

@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w
+#!/bin/bash
 
 #
 # Copyright (C) 2016 Nethesis S.r.l.
@@ -20,39 +20,35 @@
 # along with NethServer.  If not, see COPYING.
 #
 
-use strict;
-use esmith::Build::CreateLinks qw(:all);
+set -e
 
 #
-# event nethserver-ha-update
+# set hacluster's password as a one-way hash of root's one
 #
 
-event_actions('nethserver-ha-update', qw(
-    initialize-default-databases 00
-));
+if ! [ $# -ge 3 ]; then
+   echo "[ERROR] Not enough arguments."
+   exit 2
+fi
 
-event_templates('nethserver-ha-update', qw(
-    /etc/hosts
-));
+EVENT=$1
+USER=$2
+FILE=$3
 
-#
-# event nethserver-ha-save
-#
-event_templates('nethserver-ha-save', qw(
-    /etc/sysconfig/cman
-    /etc/hosts
-));
+if [[ $USER != "root" ]]; then
+    # nothing to do
+    exit 0
+fi
 
-event_actions('nethserver-ha-save', qw(
-    nethserver-ha-createcluster 20
-));
+if ! [[ -f "${FILE}" ]]; then
+    echo "[ERROR] Password file not found"
+    exit 1
+fi
 
-#
-# event password-modify
-# generate a new secret when root's password changes
-#
+PASSWORD=NS7.`(cat $FILE; echo -n ns7) | sha1sum | cut -d ' ' -f 1`
+echo -e "$PASSWORD\n$PASSWORD" | /usr/bin/passwd --stdin hacluster
 
-event_actions('password-modify', qw(
-    nethserver-ha-syncpcspw 40
-));
+umask 077
+echo -n "$PASSWORD" > /var/lib/nethserver/secrets/hacluster
 
+pcs cluster auth -u hacluster -p "$PASSWORD" || : 
