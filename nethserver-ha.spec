@@ -24,6 +24,7 @@ rm -rf %{buildroot}
 %{genfilelist} %{buildroot} > %{name}-%{version}-%{release}-filelist
 
 %files -f %{name}-%{version}-%{release}-filelist
+%doc COPYING
 
 %changelog
 * Thu Mar 17 2016 Davide Principi <davide.principi@nethesis.it> - 0.0.1
