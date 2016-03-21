@@ -23,12 +23,24 @@
 RES=drbd00
 
 disk=`config getprop ha DrbdDisk`
+if [ "x$disk" == "x" ]; then
+    echo "No DrbdDisk configured"
+    exit 1
+fi
+
+
+fstype=`blkid $disk -o value -s TYPE`
+if [ "x$fstype" != "x" ]; then
+    echo "Block device $disk is already in use!"
+    echo
+    echo "To wipe the device use the following commands:"
+    echo "  dd if=/dev/zero of=$disk bs=1M count=1"
+    echo "  drbdadm wipe-md $RES"
+    exit 1
+fi
+
 drbdadm down $RES &>/dev/null
-dd if=/dev/zero of=$disk bs=1M count=1 &>/dev/null
-# drbdadm -d wipe-md drbd00
-drbdmeta 0 v08 $disk internal wipe-md --force
-#drbdadm create-md $RES
-drbdmeta 0 v08 $disk internal create-md --force
+drbdadm create-md $RES
 drbdadm up $RES
 
 system_name=`config get SystemName`
