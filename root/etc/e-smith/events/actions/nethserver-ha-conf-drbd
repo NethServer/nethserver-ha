@@ -1,11 +1,59 @@
 #!/bin/bash
 
+#
+# Copyright (C) 2016 Nethesis S.r.l.
+# http://www.nethesis.it - nethserver@nethesis.it
+#
+# This script is part of NethServer.
+#
+# NethServer is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or any later version.
+#
+# NethServer is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with NethServer.  If not, see COPYING.
+#
+
 RES=drbd00
 
 disk=`config getprop ha DrbdDisk`
 drbdadm down $RES &>/dev/null
 dd if=/dev/zero of=$disk bs=1M count=1 &>/dev/null
-echo yes | drbdadm wipe-md $RES &>/dev/null
-drbdadm create-md $RES
+# drbdadm -d wipe-md drbd00
+drbdmeta 0 v08 $disk internal wipe-md --force
+#drbdadm create-md $RES
+drbdmeta 0 v08 $disk internal create-md --force
 drbdadm up $RES
-drbdadm --force primary $RES
+
+other_node="192.168.144.51"
+system_name=`config get SystemName`
+if [ "$system_name" == 'ns1' ]; then
+    other_node="192.168.144.52"
+fi
+
+ping -q -W 1 -c 1 $other_node >/dev/null
+if [ $? -eq 0 ]; then
+    echo "Node '$other_node' is online: DRBD creation skipped"
+    exit 0
+fi
+
+virtual_ip=`config getprop ha VirtualIP`
+ping -q -W 1 -c 1 $virtual_ip >/dev/null
+if [ $? -eq 0 ]; then
+    echo "Virtual IP '$virtual_ip' is online: DRBD creation skipped"
+    exit 0
+fi
+
+
+device=`findfs LABEL=drbd 2>/dev/null`
+if [ "x$device" == "x" ]; then
+   drbdadm --force primary $RES
+   mkfs.ext4 -L drbd /dev/drbd/by-res/$RES
+fi
+
