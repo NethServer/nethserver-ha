@@ -1,7 +1,7 @@
 {
     use esmith::HostsDB;
     my $hdb = esmith::HostsDB->open_ro();
-    our $disk = $drbd{'Disk'} || '/dev/VolGroup/lv_drbd';
+    our $disk = $ha{'DrbdDisk'} || '/dev/VolGroup/lv_drbd';
     return '';
 }
 resource drbd00 \{

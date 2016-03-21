@@ -1,0 +1,18 @@
+#
+#       Service: corosync Access: private
+#
+ACCEPT  loc     $FW     udp     5404
+ACCEPT  loc     $FW     udp     5405
+#
+#       Service: drbd Access: private
+#
+?COMMENT drbd
+ACCEPT  loc     $FW     tcp     7788
+?COMMENT drbd
+ACCEPT  loc     $FW     tcp     7799
+#
+#       Service: pcsd Access: private
+#
+?COMMENT pcsd
+ACCEPT  loc     $FW     tcp     2224
+

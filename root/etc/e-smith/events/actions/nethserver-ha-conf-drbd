@@ -2,7 +2,7 @@
 
 RES=drbd00
 
-disk=`config getprop drbd Disk`
+disk=`config getprop ha DrbdDisk`
 drbdadm down $RES &>/dev/null
 dd if=/dev/zero of=$disk bs=1M count=1 &>/dev/null
 echo yes | drbdadm wipe-md $RES &>/dev/null
