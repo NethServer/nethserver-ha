@@ -28,7 +28,7 @@ NODE2="ns2.${DOMAIN:-localdomain}"
 CONF="/etc/cluster/cluster.conf"
 
 if [ -f $CONF ]; then
-    echo "Cluster already configured, skipping ccs commands"
+    echo "[INFO] Cluster already configured, skipping ccs commands"
     exit 0
 fi
 

@@ -51,4 +51,3 @@ echo -e "$PASSWORD\n$PASSWORD" | /usr/bin/passwd --stdin hacluster
 umask 077
 echo -n "$PASSWORD" > /var/lib/nethserver/secrets/hacluster
 
-pcs cluster auth -u hacluster -p "$PASSWORD" || : 
