@@ -24,6 +24,7 @@ set -e
 
 if  ! service pcsd status &>/dev/null; then
     service pcsd start
+    sleep 3
 fi
 
 PASSWORD=$(perl -MNethServer::Password -e 'print NethServer::Password::store("hacluster");')
