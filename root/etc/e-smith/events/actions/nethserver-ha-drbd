@@ -31,17 +31,14 @@ fi
 
 fstype=`blkid $disk -o value -s TYPE`
 if [ "x$fstype" != "x" ]; then
-    echo "Block device $disk is already in use!"
+    echo "Block device $disk is already configured!"
     echo
     echo "To wipe the device use the following commands:"
     echo "  dd if=/dev/zero of=$disk bs=1M count=1"
     echo "  drbdadm wipe-md $RES"
-    exit 1
+    exit 0
 fi
 
-drbdadm down $RES &>/dev/null
-drbdadm create-md $RES
-drbdadm up $RES
 
 system_name=`config get SystemName`
 if [ "$system_name" == 'ns1' ]; then
@@ -59,6 +56,12 @@ if [ "x$virtual_ip" == "x" ]; then
     exit 1
 fi
 
+ping -q -W 1 -c 1 $virtual_ip >/dev/null
+if [ $? -eq 0 ]; then
+    echo "Virtual IP '$virtual_ip' is online: DRBD creation skipped"
+    exit 0
+fi
+
 ping -q -W 1 -c 1 $other_node >/dev/null
 if [ $? -eq 0 ]; then
     echo "Node '$other_node' is online: DRBD creation skipped"
@@ -66,16 +69,15 @@ if [ $? -eq 0 ]; then
 fi
 
 
-ping -q -W 1 -c 1 $virtual_ip >/dev/null
-if [ $? -eq 0 ]; then
-    echo "Virtual IP '$virtual_ip' is online: DRBD creation skipped"
-    exit 0
-fi
 
-
+# Initialize the DRBD device
 device=`findfs LABEL=drbd 2>/dev/null`
 if [ "x$device" == "x" ]; then
+   drbdadm down $RES &>/dev/null
+   drbdadm create-md $RES
+   drbdadm up $RES
    drbdadm --force primary $RES
    mkfs.ext4 -L drbd /dev/drbd/by-res/$RES
+   drbdadm down $RES
 fi
 
