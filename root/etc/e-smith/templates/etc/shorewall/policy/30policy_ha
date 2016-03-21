@@ -3,4 +3,5 @@
 # Allow traffic only between ha interfaces
 #
 ha	$FW	ACCEPT
+$FW	ha	ACCEPT
 
