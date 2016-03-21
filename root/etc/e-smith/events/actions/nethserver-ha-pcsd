@@ -29,3 +29,6 @@ fi
 PASSWORD=$(perl -MNethServer::Password -e 'print NethServer::Password::store("hacluster");')
 pcs cluster auth --local --force -u hacluster -p "${PASSWORD:-Nethesis,1234}"
 
+if ! pcs cluster status &>/dev/null; then
+    pcs cluster start $(hostname)
+fi
