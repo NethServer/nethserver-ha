@@ -1,0 +1,7 @@
+#!/bin/bash
+
+service pcsd status &>/dev/null
+
+if [ $? -ne 0 ]; then
+    service pcsd start
+fi

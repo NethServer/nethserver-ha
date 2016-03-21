@@ -47,6 +47,7 @@ event_templates('nethserver-ha-save', qw(
 event_actions('nethserver-ha-save', qw(
     nethserver-ha-createcluster 20
     nethserver-ha-drbd 30
+    nethserver-ha-pcsd 90
 ));
 
 #
