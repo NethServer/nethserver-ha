@@ -27,6 +27,11 @@ NODE1="ns1.${DOMAIN:-localdomain}"
 NODE2="ns2.${DOMAIN:-localdomain}"
 CONF="/etc/cluster/cluster.conf"
 
+if [ -f $CONF ]; then
+    echo "Cluster already configured, skipping ccs commands"
+    exit 0
+fi
+
 ccs -f ${CONF} --createcluster nethserverha
 ccs -f ${CONF} --addnode ${NODE1}
 ccs -f ${CONF} --addnode ${NODE2}
