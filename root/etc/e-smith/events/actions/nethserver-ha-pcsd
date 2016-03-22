@@ -28,7 +28,9 @@ if  ! service pcsd status &>/dev/null; then
 fi
 
 PASSWORD=$(perl -MNethServer::Password -e 'print NethServer::Password::store("hacluster");')
-pcs cluster auth --local --force -u hacluster -p "${PASSWORD:-Nethesis,1234}" $(hostname)
+PASSWORD=${PASSWORD:-Nethesis,1234}
+echo -e "$PASSWORD\n$PASSWORD" | /usr/bin/passwd --stdin hacluster
+pcs cluster auth --local --force -u hacluster -p "${PASSWORD}" $(hostname)
 
 if ! pcs cluster status &>/dev/null; then
     pcs cluster start $(hostname)
