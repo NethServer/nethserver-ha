@@ -35,7 +35,7 @@ event_templates('nethserver-ha-update', qw(
     /etc/hosts
 ));
 
-event_actions('runlevel-adjust'), qw(
+event_actions('runlevel-adjust', qw(
     nethserver-ha-adjustservices 50
 ));
 
