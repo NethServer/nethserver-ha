@@ -36,5 +36,8 @@ if($pcsd->is_running()) {
 foreach ($cdb->get_all_by_prop('type' => 'clustered')) {
     my $svc = NethServer::Service->new($_->key);
     $svc->stop();
+    if( -e "/etc/rc.d/init.d/" . $_->key) {
+        $svc->_set_sysv_startup(0);
+    }
 }
 
