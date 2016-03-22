@@ -28,9 +28,7 @@ if [ "x$disk" == "x" ]; then
     exit 1
 fi
 
-
-fstype=`blkid $disk -o value -s TYPE`
-if [ "x$fstype" != "x" ]; then
+if blkid $disk -o value -s TYPE; then
     echo "Block device $disk is already configured!"
     echo
     echo "To wipe the device use the following commands:"
@@ -39,6 +37,7 @@ if [ "x$fstype" != "x" ]; then
     exit 0
 fi
 
+drbdadm create-md $RES
 
 system_name=`config get SystemName`
 if [ "$system_name" == 'ns1' ]; then
@@ -68,13 +67,8 @@ if [ $? -eq 0 ]; then
     exit 0
 fi
 
-
-
 # Initialize the DRBD device
-device=`findfs LABEL=drbd 2>/dev/null`
-if [ "x$device" == "x" ]; then
-   drbdadm down $RES &>/dev/null
-   drbdadm create-md $RES
+if ! findfs LABEL=drbd; then
    drbdadm up $RES
    drbdadm --force primary $RES
    mkfs.ext4 -L drbd /dev/drbd/by-res/$RES
