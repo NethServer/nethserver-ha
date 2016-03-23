@@ -24,6 +24,7 @@ set -e
 
 if  ! service pcsd status &>/dev/null; then
     service pcsd start
+    chkconfig pcsd on
     sleep 3
 fi
 
