@@ -28,8 +28,11 @@ if  ! service pcsd status &>/dev/null; then
     sleep 3
 fi
 
-PASSWORD=$(perl -MNethServer::Password -e 'print NethServer::Password::store("hacluster");')
-PASSWORD=${PASSWORD:-Nethesis,1234}
+PASSWORD='Nethesis,1234'
+if [ ! -f /var/lib/nethserver/secrets/hacluster ]; then
+    echo $PASSWORD > /var/lib/nethserver/sercrets/hacluster
+    chmod 600 /var/lib/nethserver/sercrets/hacluster
+fi
 echo -e "$PASSWORD\n$PASSWORD" | /usr/bin/passwd --stdin hacluster
 pcs cluster auth --force -u hacluster -p "${PASSWORD}"  || :
 
