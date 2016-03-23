@@ -3,5 +3,3 @@
 #
 192.168.144.51 ns1.{$DomainName} ns1
 192.168.144.52 ns2.{$DomainName} ns2
-
-

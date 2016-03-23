@@ -5,6 +5,13 @@
     return '';
 }
 resource drbd00 \{
+  disk \{
+    fencing resource-only;
+  \}
+  handlers \{
+    fence-peer "/usr/lib/drbd/crm-fence-peer.sh";
+    after-resync-target "/usr/lib/drbd/crm-unfence-peer.sh";
+  \}
   on ns1.{{$DomainName}} \{
     device    /dev/drbd0;
     disk      {{$disk}};
