@@ -24,12 +24,12 @@ RES=drbd00
 
 disk=`config getprop ha DrbdDisk`
 if [ "x$disk" == "x" ]; then
-    echo "No DrbdDisk configured"
+    echo "[ERROR] No DrbdDisk configured"
     exit 1
 fi
 
 if blkid $disk -o value -s TYPE; then
-    echo "Block device $disk is already configured!"
+    echo "[INFO] Block device $disk is already configured!"
     echo
     echo "To wipe the device use the following commands:"
     echo "  dd if=/dev/zero of=$disk bs=1M count=1"
@@ -45,19 +45,19 @@ if [ "$system_name" == 'ns1' ]; then
 elif [ "$system_name" == 'ns2' ]; then
     exit 0
 else
-    echo "Invalid SystemName '$system_name'"
+    echo "[ERROR] Invalid SystemName '$system_name'"
     exit 1
 fi
 
 virtual_ip=`config getprop ha VirtualIP`
 if [ "x$virtual_ip" == "x" ]; then
-    echo "Virtual IP not set"
+    echo "[ERROR] Virtual IP not set"
     exit 1
 fi
 
 ping -q -W 1 -c 1 $virtual_ip >/dev/null
 if [ $? -eq 0 ]; then
-    echo "Virtual IP '$virtual_ip' is online: DRBD creation skipped"
+    echo "[INFO] Virtual IP '$virtual_ip' is online: DRBD creation skipped"
     exit 0
 fi
 
