@@ -38,6 +38,7 @@ pcs cluster auth --force -u hacluster -p "${PASSWORD}"  || :
 
 if ! pcs cluster status &>/dev/null; then
     pcs cluster start $(hostname)
+    pcs cluster enable $(hostname)
 fi
 
 pcs cluster status
