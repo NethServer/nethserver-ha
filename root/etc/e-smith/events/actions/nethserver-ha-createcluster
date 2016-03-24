@@ -28,13 +28,15 @@ NODE2="ns2.${DOMAIN:-localdomain}"
 NODE1_ALT="192.168.144.51"
 NODE2_ALT="192.168.144.52"
 CONF="/etc/cluster/cluster.conf"
+CLUNAME=$(/sbin/e-smith/config getprop ha ClusterName)
+CLUNAME=${CLUNAME:-${DOMAIN}}
 
 if [ -f $CONF ]; then
     echo "Cluster already configured, skipping ccs commands"
     exit 0
 fi
 
-ccs -f ${CONF} --createcluster nethserverha
+ccs -f ${CONF} --createcluster "${CLUNAME:0:15}"
 ccs -f ${CONF} --addnode ${NODE1}
 ccs -f ${CONF} --addalt ${NODE1} ${NODE1_ALT}
 ccs -f ${CONF} --addnode ${NODE2}
