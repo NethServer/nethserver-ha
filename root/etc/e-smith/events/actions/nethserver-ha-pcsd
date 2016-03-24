@@ -29,10 +29,13 @@ if  ! service pcsd status &>/dev/null; then
     sleep 3
 fi
 
-PASSWORD='Nethesis,1234'
-if [ ! -f /var/lib/nethserver/secrets/hacluster ]; then
-    echo $PASSWORD > /var/lib/nethserver/secrets/hacluster
-    chmod 600 /var/lib/nethserver/secrets/hacluster
+tokenfile=/var/lib/nethserver/secrets/hacluster
+if [ -f "${tokenfile}" ]; then
+    PASSWORD=$(cat ${tokenfile})
+else
+    PASSWORD='Nethesis,1234'
+    echo $PASSWORD > ${tokenfile}
+    chmod 600 ${tokenfile}
 fi
 echo -e "$PASSWORD\n$PASSWORD" | /usr/bin/passwd --stdin hacluster
 pcs cluster auth --force -u hacluster -p "${PASSWORD}"  || :
