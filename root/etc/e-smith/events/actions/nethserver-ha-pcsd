@@ -25,6 +25,7 @@ set -e
 if  ! service pcsd status &>/dev/null; then
     service pcsd start
     chkconfig pcsd on
+    chkconfig drbd off
     sleep 3
 fi
 
@@ -38,7 +39,6 @@ pcs cluster auth --force -u hacluster -p "${PASSWORD}"  || :
 
 if ! pcs cluster status &>/dev/null; then
     pcs cluster start $(hostname)
-    pcs cluster enable $(hostname)
 fi
 
 pcs cluster status
