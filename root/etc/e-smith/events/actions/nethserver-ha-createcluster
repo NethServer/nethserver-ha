@@ -29,7 +29,7 @@ NODE1_ALT="192.168.144.51"
 NODE2_ALT="192.168.144.52"
 CONF="/etc/cluster/cluster.conf"
 CLUNAME=$(/sbin/e-smith/config getprop ha ClusterName)
-CLUNAME=${CLUNAME:-${DOMAIN}}
+CLUNAME=${CLUNAME:-ha-$(/sbin/e-smith/config getprop ha VirtualIP | md5sum)}
 
 if [ -f $CONF ]; then
     echo "Cluster already configured, skipping ccs commands"
