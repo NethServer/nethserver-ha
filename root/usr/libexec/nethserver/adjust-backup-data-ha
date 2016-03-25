@@ -1,0 +1,17 @@
+#!/bin/bash
+
+drbd_status=$(drbd-overview  | awk '{print $3}'| cut -d'/' -f 1)
+vfs_type=$(config getprop backup-data VFSType)
+
+if [ "x$vfs_type" != "x" ]; then # backup is configured
+    if [ "$drbd_status" == "Primary" ]; then 
+        # this node is master, enable backup
+        config setprop backup-data status enabled
+        expand-template /etc/cron.d/backup-data
+    else 
+        # this node is slave, disable backup
+       config setprop backup-data status disabled
+        expand-template /etc/cron.d/backup-data
+    fi
+fi
+

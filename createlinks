@@ -33,6 +33,7 @@ event_actions('nethserver-ha-update', qw(
 
 event_templates('nethserver-ha-update', qw(
     /etc/hosts
+    /etc/cron.d/backup-data-ha
 ));
 
 #
@@ -57,5 +58,13 @@ event_actions('nethserver-ha-save', qw(
 
 event_actions('password-modify', qw(
     nethserver-ha-syncpcspw 40
+));
+
+#
+# event nethserver-backup-data-save
+#
+
+event_templates('nethserver-backup-data-save', qw(
+    /etc/cron.d/backup-data-ha
 ));
 

@@ -1,0 +1,26 @@
+{
+    $OUT = '';
+
+    use esmith::ConfigDB;
+    use DateTime;
+    my $confdb = esmith::ConfigDB->open;
+    my $backup = $confdb->get('backup-data') or die "No backup-data db entry found\n";
+
+    my $backupMin;
+    my $backupHour;
+
+    my $backupTime = $backup->prop('BackupTime') || "1:00";
+
+    ($backupHour, $backupMin) = split (":", $backupTime, -1);
+    my $dt = DateTime->new(
+        year   => 1,
+        month  => 1,
+        day    => 1,
+        hour   => $backupHour, 
+        minute => $backupMin,
+    );
+    $dt->subtract(minutes => 5);
+
+    # Esecute adjust-backup-data-ha 5 minutes before backup-data
+    $OUT .= $dt->minute." ".$dt->hour." * * * root /usr/libexec/nethserver/adjust-backup-data-ha";
+}
