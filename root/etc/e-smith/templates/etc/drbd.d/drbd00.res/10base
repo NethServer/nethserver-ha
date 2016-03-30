@@ -2,26 +2,28 @@
     use esmith::HostsDB;
     my $hdb = esmith::HostsDB->open_ro();
     our $disk = $ha{'DrbdDisk'} || '/dev/VolGroup/lv_drbd';
+    our $ns1 = $ha{'NS1'} || die("Node NS1 has no IP") ;
+    our $ns2 = $ha{'NS2'} || die("Node NS2 has no IP");
     return '';
 }
 resource drbd00 \{
   disk \{
-    fencing resource-only;
+    fencing resource-and-stonith;
   \}
   handlers \{
-    fence-peer "/usr/lib/drbd/crm-fence-peer.sh";
+    fence-peer "/usr/lib/drbd/stonith_admin-fence-peer.sh";
     after-resync-target "/usr/lib/drbd/crm-unfence-peer.sh";
   \}
   on ns1.{{$DomainName}} \{
     device    /dev/drbd0;
     disk      {{$disk}};
-    address   192.168.144.51:7789;
+    address   {{$ns1}}:7789;
     meta-disk internal;
   \}
   on ns2.{{$DomainName}} \{
     device    /dev/drbd0;
     disk      {{$disk}};
-    address   192.168.144.52:7789;
+    address   {{$ns2}}:7789;
     meta-disk internal;
   \}
 \}
