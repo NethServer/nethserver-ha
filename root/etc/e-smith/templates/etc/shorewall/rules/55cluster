@@ -1,4 +1,8 @@
 #
+# 55cluster
+#
+
+#
 #       Service: corosync Access: private
 #
 ACCEPT  loc     $FW     udp     5404
@@ -7,9 +11,7 @@ ACCEPT  loc     $FW     udp     5405
 #       Service: drbd Access: private
 #
 ?COMMENT drbd
-ACCEPT  loc     $FW     tcp     7788
-?COMMENT drbd
-ACCEPT  loc     $FW     tcp     7799
+ACCEPT  loc     $FW     tcp     7789
 #
 #       Service: pcsd Access: private
 #
