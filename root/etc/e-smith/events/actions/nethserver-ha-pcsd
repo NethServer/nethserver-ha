@@ -29,6 +29,11 @@ if  ! service pcsd status &>/dev/null; then
     sleep 3
 fi
 
+if  service acpid status &>/dev/null; then
+    service acpid stop
+    chkconfig acpid off
+fi
+
 tokenfile=/var/lib/nethserver/secrets/hacluster
 if [ -f "${tokenfile}" ]; then
     PASSWORD=$(cat ${tokenfile})
