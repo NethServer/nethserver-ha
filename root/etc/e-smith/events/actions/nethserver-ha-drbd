@@ -70,6 +70,8 @@ fi
 if ! findfs LABEL=drbd; then
    drbdadm up $RES
    drbdadm --force primary $RES
+   sync
+   sleep 1
    mkfs.ext4 -L drbd /dev/drbd/by-res/$RES
    sync
    sleep 1
