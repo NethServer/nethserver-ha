@@ -1,6 +1,6 @@
 Name:		nethserver-ha
-Version:	0.0.1
-Release:	1%{dist}
+Version: 1.0.0
+Release: 1%{?dist}
 Summary:	NethServer cluster helper
 License:	GPL	
 Source0:	%{name}-%{version}.tar.gz
@@ -27,5 +27,8 @@ rm -rf %{buildroot}
 %doc COPYING
 
 %changelog
+* Thu Mar 31 2016 Davide Principi <davide.principi@nethesis.it> - 1.0.0-1
+- Initial release
+
 * Thu Mar 17 2016 Davide Principi <davide.principi@nethesis.it> - 0.0.1
 - Initial version
