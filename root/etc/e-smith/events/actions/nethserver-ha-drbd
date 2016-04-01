@@ -37,7 +37,11 @@ if blkid $disk -o value -s TYPE; then
     exit 0
 fi
 
-drbdadm create-md $RES
+yes no | drbdadm create-md $RES
+if [ $? -ne 0 ]; then
+    echo "[ERROR] DRBD $RES initialization failed!"
+    exit 1
+fi
 
 system_name=`config get SystemName`
 if [ "$system_name" == 'ns1' ]; then
