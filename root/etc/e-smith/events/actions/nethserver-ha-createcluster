@@ -25,8 +25,6 @@ set -e
 DOMAIN=$(hostname -d)
 NODE1="ns1.${DOMAIN:-localdomain}"
 NODE2="ns2.${DOMAIN:-localdomain}"
-NODE1_ALT="192.168.144.51"
-NODE2_ALT="192.168.144.52"
 CONF="/etc/cluster/cluster.conf"
 CLUNAME=$(/sbin/e-smith/config getprop ha ClusterName)
 CLUNAME=${CLUNAME:-ha-$(/sbin/e-smith/config getprop ha VirtualIP | md5sum)}
@@ -38,9 +36,7 @@ fi
 
 ccs -f ${CONF} --createcluster "${CLUNAME:0:15}"
 ccs -f ${CONF} --addnode ${NODE1}
-ccs -f ${CONF} --addalt ${NODE1} ${NODE1_ALT}
 ccs -f ${CONF} --addnode ${NODE2}
-ccs -f ${CONF} --addalt ${NODE2} ${NODE2_ALT}
 ccs -f ${CONF} --addfencedev pcmk agent=fence_pcmk
 ccs -f ${CONF} --addmethod pcmk-redirect ${NODE1}
 ccs -f ${CONF} --addmethod pcmk-redirect ${NODE2}
