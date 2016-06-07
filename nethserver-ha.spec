@@ -1,5 +1,5 @@
 Name:		nethserver-ha
-Version: 1.0.0
+Version: 1.0.1
 Release: 1%{?dist}
 Summary:	NethServer cluster helper
 License:	GPL	
@@ -27,6 +27,10 @@ rm -rf %{buildroot}
 %doc COPYING
 
 %changelog
+* Tue Jun 07 2016 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 1.0.1-1
+- Removed alt ring
+- nethserver-ha-drbd: exit if drbd initialization fails
+
 * Thu Mar 31 2016 Davide Principi <davide.principi@nethesis.it> - 1.0.0-1
 - Initial release
 
